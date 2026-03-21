@@ -1,4 +1,4 @@
-# ninjad
+# greninja
 
 Tiny utility to generate `.ninja` build files programmatically.
 

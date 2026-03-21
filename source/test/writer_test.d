@@ -1,6 +1,6 @@
 module test.writer_test;
 
-import ninjad.writer;
+import greninja.writer;
 
 unittest{
     auto w = new Writer("writer_build.ninja");

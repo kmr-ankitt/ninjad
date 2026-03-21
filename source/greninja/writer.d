@@ -1,4 +1,4 @@
-module ninjad.writer;
+module greninja.writer;
 
 import std.stdio;
 
