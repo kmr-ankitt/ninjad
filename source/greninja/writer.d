@@ -10,9 +10,9 @@ class Writer
   uint width;
 
   /**
-   @params:
-   1. name of the file
-   2. width of the output, default is 78 
+   * @params:
+   * 1. string: name of the file
+   * 2. uint: width of the output, default is 78 
   **/
   this(string filename, uint width = 78)
   {
@@ -22,10 +22,10 @@ class Writer
 
   /** 
     * @params:
-    * 1. text to write
-    * 2. (optional) indent level default is 0
+    * 1. string: text to write
+    * 2. uint: (optional) indent level default is 0
   **/
-  void line(string text, int indent = 0)
+  void line(string text, uint indent = 0)
   {
     string leading_space = "";
     foreach (_; 0 .. indent)
@@ -38,11 +38,11 @@ class Writer
 
   /** 
    * @params:
-   * 1. name of the variable
-   * 2. value of variable
-   * 3. (optional) indent level default is 0
+   * 1. string: name of the variable
+   * 2. string: value of variable
+   * 3. uint: (optional) indent level default is 0
    **/
-  void variable(string key, string value, int indent = 0)
+  void variable(string key, string value, uint indent = 0)
   {
     if (value.length == 0)
       return;
@@ -50,18 +50,15 @@ class Writer
   }
 
   /** 
-    @params:
-    1. name of the rule
-    2. command to execute
+   * @params:
+   * 1. string: name of the rule
+   * 2. string: command to execute
   **/
   void rule(string name, string command)
   {
     this.line("rule " ~ name);
     this.line("command = " ~ command, 1);
   }
-
-  // build special.o: cc special.c
-  //   [[cflags, -Wall], [deps, deplink]]
 
   /**
     @params:
