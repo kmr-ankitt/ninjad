@@ -121,6 +121,36 @@ class Writer
     this.output.write("\n");
   }
 
+
+  /** 
+    * @params:
+    * 1. string: path to the file to include
+  **/
+  void include(string path)
+  {
+      this.line("include " ~ escapePath(path));
+  }
+
+
+  /** 
+    * @params:
+    * 1. string: path to the file to include
+  **/
+  void subninja(string path)
+  {
+      this.line("subninja " ~ escapePath(path));
+  }
+    
+
+  /** 
+    * @params:
+    * 1. string: text to write as a comment
+  **/
+  void comment(string text)
+  {
+      this.line("# " ~ text);
+  }
+    
   void close()
   {
     this.output.close();
