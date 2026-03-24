@@ -20,11 +20,6 @@ class Writer
     this.width = width;
   }
 
-  ~this()
-  {
-    this.output.close();
-  }
-
   /** 
     * @params:
     * 1. string: text to write
@@ -63,6 +58,7 @@ class Writer
   {
     this.line("rule " ~ name);
     this.line("command = " ~ command, 1);
+    this.newline();
   }
 
   /**
@@ -70,15 +66,23 @@ class Writer
     1. string[]: output files
     2. string: rule to use
     3. string[]: input files
+    4. (optional) string[]: implicit dependencies, default is empty
+    5. (optional) string[]: order-only dependencies, default is empty
     4. (optional) string[][]: variables to set for this build, default is empty
   **/
-  void build(string[] output, string rule, string[] input, string[][] variables = [
-    ][])
+  void build(string[] output, string rule, string[] input, string[] implicit = [],
+    string[] order_only = [], string[][] variables = [])
   {
-    string output_str = output.join(" ");
-    string input_str = input.join(" ");
+    string line = "build " ~ output.join(" ") ~ ": " ~ rule;
 
-    this.line(format("build %s: %s %s", output_str, rule, input_str));
+    if (input.length > 0)
+      line ~= " " ~ input.join(" ");
+    if (implicit.length > 0)
+      line ~= " | " ~ implicit.join(" ");
+    if (order_only.length > 0)
+      line ~= " || " ~ order_only.join(" ");
+
+    this.line = line;
 
     foreach (value; variables)
     {
@@ -90,6 +94,8 @@ class Writer
 
       this.variable(key, val, 1);
     }
+
+    this.newline();
   }
 
   /**
@@ -99,5 +105,15 @@ class Writer
   void _default(string[] paths)
   {
     this.line("default " ~ paths.join(" "));
+  }
+
+  void newline()
+  {
+    this.output.write("\n");
+  }
+
+  void close()
+  {
+    this.output.close();
   }
 }
