@@ -4,7 +4,7 @@ import std.stdio;
 import std.string : join;
 import std.format : format;
 import std.array : array;
-import std.algorithm: map;
+import std.algorithm : map;
 import greninja.utils;
 
 class Writer
@@ -73,14 +73,19 @@ class Writer
     5. (optional) string[]: order-only dependencies, default is empty
     4. (optional) string[][]: variables to set for this build, default is empty
   **/
-  void build(string[] output, string rule, string[] input, string[] implicit = [],
-    string[] order_only = [], string[][] variables = [])
+  void build(T1, T2, T3)(T1 output, string rule, T2 input, T3 implicit = null,
+    T3 order_only = null, string[][] variables = [])
   {
 
-    auto out_outputs = output.map!(a => escapePath(a)).array;
-    auto all_inputs = input.map!(a => escapePath(a)).array;
-    auto implicit_inputs = implicit.map!(a => escapePath(a)).array;
-    auto order_only_inputs = order_only.map!(a => escapePath(a)).array;
+    auto outputs = asList(output);
+    auto inputs = asList(input);
+    auto implicits = asList(implicit);
+    auto orders = asList(order_only);
+
+    auto out_outputs = outputs.map!(a => escapePath(a)).array;
+    auto all_inputs = inputs.map!(a => escapePath(a)).array;
+    auto implicit_inputs = implicits.map!(a => escapePath(a)).array;
+    auto order_only_inputs = orders.map!(a => escapePath(a)).array;
 
     string line = "build " ~ out_outputs.join(" ") ~ ": " ~ rule;
 
@@ -121,16 +126,14 @@ class Writer
     this.output.write("\n");
   }
 
-
   /** 
     * @params:
     * 1. string: path to the file to include
   **/
   void include(string path)
   {
-      this.line("include " ~ escapePath(path));
+    this.line("include " ~ escapePath(path));
   }
-
 
   /** 
     * @params:
@@ -138,9 +141,8 @@ class Writer
   **/
   void subninja(string path)
   {
-      this.line("subninja " ~ escapePath(path));
+    this.line("subninja " ~ escapePath(path));
   }
-    
 
   /** 
     * @params:
@@ -148,9 +150,9 @@ class Writer
   **/
   void comment(string text)
   {
-      this.line("# " ~ text);
+    this.line("# " ~ text);
   }
-    
+
   void close()
   {
     this.output.close();
