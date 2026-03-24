@@ -3,6 +3,9 @@ module greninja.writer;
 import std.stdio;
 import std.string : join;
 import std.format : format;
+import std.array : array;
+import std.algorithm: map;
+import greninja.utils;
 
 class Writer
 {
@@ -73,14 +76,20 @@ class Writer
   void build(string[] output, string rule, string[] input, string[] implicit = [],
     string[] order_only = [], string[][] variables = [])
   {
-    string line = "build " ~ output.join(" ") ~ ": " ~ rule;
 
-    if (input.length > 0)
-      line ~= " " ~ input.join(" ");
-    if (implicit.length > 0)
-      line ~= " | " ~ implicit.join(" ");
-    if (order_only.length > 0)
-      line ~= " || " ~ order_only.join(" ");
+    auto out_outputs = output.map!(a => escapePath(a)).array;
+    auto all_inputs = input.map!(a => escapePath(a)).array;
+    auto implicit_inputs = implicit.map!(a => escapePath(a)).array;
+    auto order_only_inputs = order_only.map!(a => escapePath(a)).array;
+
+    string line = "build " ~ out_outputs.join(" ") ~ ": " ~ rule;
+
+    if (all_inputs.length > 0)
+      line ~= " " ~ all_inputs.join(" ");
+    if (implicit_inputs.length > 0)
+      line ~= " | " ~ implicit_inputs.join(" ");
+    if (order_only_inputs.length > 0)
+      line ~= " || " ~ order_only_inputs.join(" ");
 
     this.line = line;
 

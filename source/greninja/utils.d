@@ -1,5 +1,7 @@
 module greninja.utils;
 
+import std.string : replace;
+
 string[] asList(T)(T input)
 {
   static if (is(T == string))
@@ -22,4 +24,12 @@ string[] asList(T)(T input)
   {
     static assert(0, "Unsupported type");
   }
+}
+
+string escapePath(string word)
+{
+    word = word.replace("$ ", "$$ ");
+    word = word.replace(" ", "$ ");
+    word = word.replace(":", "$:");
+    return word;
 }
